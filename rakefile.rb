@@ -17,7 +17,7 @@ task :declare do
     publish('src', 'catch_runner.cpp', dst: 'source')
 end
 
-task :define
+task :define => :declare
 
 task :test do
     Rake::Task['ut:test'].invoke
