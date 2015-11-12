@@ -9,7 +9,7 @@ task :help do
 end
 
 task :declare do
-    publish('src', '**/*.hpp', dst: shared_dir('include'))
+    publish('src', '**/*.hpp', dst: 'include')
     Dir.chdir(shared_dir('extern')) do
         git_clone('https://github.com/philsquared', 'catch')
     end
