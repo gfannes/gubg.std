@@ -9,12 +9,12 @@ task :help do
 end
 
 task :declare do
-    publish('src', '**/*.hpp', dst: 'include')
+    publish('src', pattern: '**/*.hpp', dst: 'include')
     Dir.chdir(shared_dir('extern')) do
         git_clone('https://github.com/philsquared', 'catch')
     end
-    publish(shared_dir('extern', 'catch', 'single_include'), '*.hpp', dst: 'include')
-    publish('src', 'catch_runner.cpp', dst: 'source')
+    publish(shared_dir('extern', 'catch', 'single_include'), pattern: '*.hpp', dst: 'include')
+    publish('src', pattern: 'catch_runner.cpp', dst: 'source')
 end
 
 task :define => :declare
