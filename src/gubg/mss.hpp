@@ -2,8 +2,9 @@
 #define HEADER_gubg_mss_hpp_ALREADY_INCLUDED
 
 namespace gubg { namespace mss { 
-    template <typename T>
-        bool ok(T v) {return v;}
+    template <typename RC>
+        bool ok(RC rc) {return rc == RC::OK;}
+    inline bool ok(bool b) {return b;}
 } } 
 
 #include "gubg/macro/variadic.h"
