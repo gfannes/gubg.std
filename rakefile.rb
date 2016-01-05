@@ -9,7 +9,7 @@ task :help do
 end
 
 task :declare do
-    publish('src', pattern: '**/*.hpp', dst: 'include')
+    publish('src', pattern: '**/*.h*', dst: 'include')
     Dir.chdir(shared_dir('extern')) do
         git_clone('https://github.com/philsquared', 'catch')
     end
@@ -25,9 +25,10 @@ end
 
 namespace :ut do
     ut = nil
-    task :setup do
+    task :setup => :declare do
         ut = Build::Executable.new('unit_tests')
         ut.add_include_path(shared_dir('include'))
+        ut.add_sources(FileList.new('src/gubg/**/test/*_tests.cpp'))
         ut.add_sources(shared_file('source', 'catch_runner.cpp'))
     end
     task :test => :setup do

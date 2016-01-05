@@ -1,4 +1,5 @@
 unit_tests
+.cache
 
 # Compiled Object files
 *.slo
