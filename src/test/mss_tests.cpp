@@ -5,14 +5,16 @@ using namespace std;
 
 bool one(bool b)
 {
+    MSS_BEGIN(bool);
     MSS(b);
-    return true;
+    MSS_END();
 }
 bool two(bool b, string &msg)
 {
+    MSS_BEGIN(bool);
     MSS(b, msg="fail");
     msg="ok";
-    return true;
+    MSS_END();
 }
 
 TEST_CASE("MSS tests", "[ut][mss]")
