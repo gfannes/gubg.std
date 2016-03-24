@@ -1,14 +1,14 @@
-#include "gubg/Testing.hpp"
+#include "catch.hpp"
 #include "gubg/tmp/Types.hpp"
-#include <utility>
 #include "gubg/tmp/SFINAE.hpp"
 #include "gubg/tmp/Equal.hpp"
+#include <utility>
 using namespace gubg::tmp;
 
 class HasFoo
 {
     public:
-int X;
+        int X;
     private:
 };
 class HasNotFoo
@@ -22,19 +22,19 @@ class DetectX
 {
     struct Fallback { int X; }; // add member name "X"
     struct Derived : T, Fallback { };
- 
+
     template<typename U, U> struct Check;
- 
+
     typedef char ArrayOfOne[1];  // typedef for an array of size one.
     typedef char ArrayOfTwo[2];  // typedef for an array of size two.
- 
+
     template<typename U> 
-    static ArrayOfOne & func(Check<int Fallback::*, &U::X> *);
- 
+        static ArrayOfOne & func(Check<int Fallback::*, &U::X> *);
+
     template<typename U> 
-    static ArrayOfTwo & func(...);
- 
-  public:
+        static ArrayOfTwo & func(...);
+
+    public:
     typedef DetectX type;
     enum { value = sizeof(func<Derived>(0)) == 2 };
 };
@@ -64,15 +64,10 @@ namespace
     GUBG_CHECK_FOR_METHOD(HasUsedMemoryMethod, used_memory, size_t (U::*)() const);
 }
 
-#define GUBG_MODULE "test"
-#include "gubg/log/begin.hpp"
-int main()
+TEST_CASE("SFINAE", "[ut][tmp]")
 {
-    TEST_TAG(SFINAE);
-    TEST_TRUE(DetectX<HasFoo>::value);
-    TEST_FALSE(DetectX<HasNotFoo>::value);
-    TEST_TRUE((Equal<HasUsedMemoryMethod<HasUsedMemory>::Value, HasMethod>::Value));
-    TEST_TRUE((Equal<HasUsedMemoryMethod<HasNotUsedMemory>::Value, HasNotMethod>::Value));
-    return 0;
+    REQUIRE(DetectX<HasFoo>::value);
+    REQUIRE(!DetectX<HasNotFoo>::value);
+    REQUIRE((Equal<HasUsedMemoryMethod<HasUsedMemory>::Value, HasMethod>::Value));
+    REQUIRE((Equal<HasUsedMemoryMethod<HasNotUsedMemory>::Value, HasNotMethod>::Value));
 }
-#include "gubg/log/end.hpp"

@@ -1,10 +1,13 @@
-#include "gubg/Testing.hpp"
+#include "catch.hpp"
 #include "gubg/tmp/FindBaseByName.hpp"
+#include "gubg/debug.hpp"
 #include <string>
 using namespace gubg::tmp;
 
-#define GUBG_MODULE "test"
-#include "gubg/log/begin.hpp"
+namespace  { 
+    const char *logns = "test";
+} 
+
 //Names that will be used to indicate the different published base classes
 struct E_tag{};
 struct T_tag{};
@@ -16,27 +19,27 @@ struct WTF_tag{};
 struct C
 {
     typedef Null Pubs;
-    C(){S();L("C ctor");}
+    C(){S(logns);L("C ctor");}
 };
 struct E: C
 {
     typedef TypeList<NameType<EC_tag, C> > Pubs;
-    E(){S();L("E ctor");}
+    E(){S(logns);L("E ctor");}
 };
 struct T: C
 {
     typedef TypeList<NameType<TC_tag, C> > Pubs;
-    T(){S();L("T ctor");}
+    T(){S(logns);L("T ctor");}
 };
 struct LL_: E, T
 {
     typedef TypeList<NameType<E_tag, E>, TypeList<NameType<T_tag, T> > > Pubs;
-    LL_(){S();L("LL_ ctor");}
+    LL_(){S(logns);L("LL_ ctor");}
 };
 
-int main()
+TEST_CASE("FindBaseByName tests", "[ut][tmp]")
 {
-    TEST_TAG(Inheritance);
+    S(logns);
     L("We lookup recursively the type named \"E_tag\"");
     FindBaseByName<E_tag, LL_::Pubs>::Type e;
 
@@ -45,6 +48,4 @@ int main()
 
     L("We lookup recursively the type named \"WTF_tag\"");
     FindBaseByName<WTF_tag, LL_::Pubs>::Type wtf;
-    return 0;
 }
-#include "gubg/log/end.hpp"

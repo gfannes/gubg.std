@@ -7,5 +7,5 @@ TEST_CASE("Semaphore tests", "[ut][semaphore]")
     Semaphore s(2);
     s.take();
     s.take();
-    s.take();
+    /* s.take(); */
 }

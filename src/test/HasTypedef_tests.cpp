@@ -1,18 +1,13 @@
-#include "gubg/Testing.hpp"
+#include "catch.hpp"
 #include "gubg/tmp/HasTypedef.hpp"
 #include <string>
 using namespace gubg::tmp;
 
-#define GUBG_MODULE "test"
-#include "gubg/log/begin.hpp"
 struct S1 { typedef int Name; };
 struct S2 { };
 
-int main()
+TEST_CASE("HasTypedef tests", "[ut][tmp]")
 {
-    TEST_TAG(HasTypedef);
-    TEST_TRUE((HasTypedef<S1>::Value));
-    TEST_FALSE((HasTypedef<S2>::Value));
-    return 0;
+    REQUIRE((HasTypedef<S1>::Value));
+    REQUIRE(!(HasTypedef<S2>::Value));
 }
-#include "gubg/log/end.hpp"

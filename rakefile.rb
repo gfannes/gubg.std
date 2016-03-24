@@ -30,7 +30,7 @@ namespace :ut do
         ut.add_define('DEBUG')
         ut.add_option('g')
         ut.add_include_path(shared_dir('include'))
-        ut.add_sources(FileList.new('src/gubg/**/test/*_tests.cpp'))
+        ut.add_sources(FileList.new('src/test/*_tests.cpp'))
         ut.add_sources(shared_file('source', 'catch_runner.cpp'))
         ut.add_sources(FileList.new('src/gubg/**/*.hpp'))
         ut.add_sources(FileList.new('src/gubg/**/*.h'))

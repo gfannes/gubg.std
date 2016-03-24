@@ -1,10 +1,8 @@
-#include "gubg/Testing.hpp"
+#include "catch.hpp"
 #include "gubg/tmp/Inheritance.hpp"
 #include <string>
 using namespace gubg::tmp;
 
-#define GUBG_MODULE "test"
-#include "gubg/log/begin.hpp"
 struct Base1 {};
 struct Base2 {};
 struct Derived1: Base1 {};
@@ -13,20 +11,17 @@ struct Derived12: Base1, Base2 {};
 struct Derived_1: Derived1 {};
 struct Unrelated {};
 
-int main()
+TEST_CASE("Inheritance tests", "[ut][tmp]")
 {
-    TEST_TAG(Inheritance);
-    TEST_TRUE((Inheritance<Derived1, Base1>::Value));
-    TEST_FALSE((Inheritance<Base1, Derived1>::Value));
-    TEST_TRUE((Inheritance<Derived12, Base1>::Value));
-    TEST_FALSE((Inheritance<Base1, Derived12>::Value));
-    TEST_TRUE((Inheritance<Derived12, Base2>::Value));
-    TEST_FALSE((Inheritance<Base2, Derived12>::Value));
-    TEST_TRUE((Inheritance<Derived_1, Base1>::Value));
-    TEST_FALSE((Inheritance<Base1, Derived_1>::Value));
-    TEST_FALSE((Inheritance<Unrelated, Base1>::Value));
-    TEST_TRUE((Inheritance<Base1, Base1>::Value));
-    TEST_TRUE((Inheritance<Derived_1, Derived_1>::Value));
-    return 0;
+    REQUIRE((Inheritance<Derived1, Base1>::Value));
+    REQUIRE(!(Inheritance<Base1, Derived1>::Value));
+    REQUIRE((Inheritance<Derived12, Base1>::Value));
+    REQUIRE(!(Inheritance<Base1, Derived12>::Value));
+    REQUIRE((Inheritance<Derived12, Base2>::Value));
+    REQUIRE(!(Inheritance<Base2, Derived12>::Value));
+    REQUIRE((Inheritance<Derived_1, Base1>::Value));
+    REQUIRE(!(Inheritance<Base1, Derived_1>::Value));
+    REQUIRE(!(Inheritance<Unrelated, Base1>::Value));
+    REQUIRE((Inheritance<Base1, Base1>::Value));
+    REQUIRE((Inheritance<Derived_1, Derived_1>::Value));
 }
-#include "gubg/log/end.hpp"

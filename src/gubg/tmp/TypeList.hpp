@@ -2,7 +2,7 @@
 #define HEADER_gubg_tmp_TypeList_hpp_ALREADY_INCLUDED
 
 #include "gubg/tmp/Types.hpp"
-#include "gubg/Macro.hpp"
+#include "gubg/macro/variadic.h"
 
 namespace gubg
 {
