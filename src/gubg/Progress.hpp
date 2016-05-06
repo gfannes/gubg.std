@@ -11,6 +11,9 @@ namespace gubg {
             Progresss(){}
             Progresss(size_t nr): nr(nr) {}
 
+            bool empty() const {return nr == 0;}
+            size_t size() const {return nr;}
+
             operator bool() const {return ix < nr;}
 
             Progresss &operator++()
