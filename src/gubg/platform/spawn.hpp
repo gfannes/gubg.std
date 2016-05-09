@@ -9,7 +9,7 @@ namespace gubg { namespace platform {
     bool spawn(const std::string &command);
 
     namespace detail { 
-            void add_option(std::ostringstream &oss) { }
+            inline void add_option(std::ostringstream &oss) { }
         template <typename FirstOption, typename ...OptionsRest>
             void add_op(std::ostringstream &oss, FirstOption firstOption, OptionsRest... optionsRest)
             {

@@ -1,5 +1,6 @@
 require(File.join(ENV['gubg'], 'shared'))
 require('gubg/build/Executable')
+require('gubg/build/Library')
 include GUBG
 
 task :default => :help
@@ -17,7 +18,14 @@ task :declare do
     publish('src', pattern: 'catch_runner.cpp', dst: 'source')
 end
 
-task :define => :declare
+task :define => :declare do
+    lib = Build::Library.new('gubg.std')
+    lib.add_include_path(shared_dir('include'))
+    lib.add_sources(FileList.new('src/gubg/**/*.cpp'))
+    lib.add_sources(FileList.new(shared('include', '**/*.hpp')))
+    lib.build
+    publish(lib.lib_filename, dst: 'lib')
+end
 
 task :test do
     Rake::Task['ut:test'].invoke
