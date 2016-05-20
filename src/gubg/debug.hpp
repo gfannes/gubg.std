@@ -2,6 +2,7 @@
 #define HEADER_gubg_debug_hpp_ALREADY_INCLUDED
 
 #include "gubg/macro/stream.hpp"
+#include "gubg/macro/capture.hpp"
 #include <iostream>
 
 namespace gubg { namespace debug { 
