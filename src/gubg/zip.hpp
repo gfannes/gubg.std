@@ -12,6 +12,15 @@ namespace gubg {
             return true;
         }
 
+    template <typename It0, typename It1, typename It2, typename Ftor>
+        bool zip(It0 it_0, It0 end_0, It1 it_1, It2 it_2, Ftor ftor)
+        {
+            for (; it_0 != end_0; ++it_0, ++it_1, ++it_2)
+                if (!ftor(*it_0, *it_1, *it_2))
+                    return false;
+            return true;
+        }
+
 } 
 
 #endif
