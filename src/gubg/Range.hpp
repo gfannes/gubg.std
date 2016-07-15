@@ -18,6 +18,7 @@ namespace gubg {
                 Range(It b, It e): begin_(b), end_(e) {}
 
                 bool empty() const {return begin_ == end_;}
+                size_t size() const {return end_ - begin_;}
                 reference front() {return *begin_;}
 
                 It begin() {return begin_;}
