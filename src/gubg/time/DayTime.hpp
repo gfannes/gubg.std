@@ -11,12 +11,14 @@ namespace gubg { namespace time {
     class DayTime
     {
         private:
-            constexpr static const char *logns = "DayTime";
+            constexpr static const char *logns = nullptr;//"DayTime";
             static const unsigned int sec_per_day = 86400;
             static const unsigned int sec_per_hour = 3600;
             static const unsigned int sec_per_minute = 60;
 
         public:
+            using Seconds = std::chrono::seconds;
+
             DayTime(){}
             DayTime(unsigned int hour, unsigned int min = 0, unsigned int sec = 0): seconds_(hour*sec_per_hour + min*sec_per_minute + sec){}
             static bool from_armin(DayTime &dt, unsigned int armin)
@@ -39,10 +41,23 @@ namespace gubg { namespace time {
                 MSS_END();
             }
 
+            bool operator==(const DayTime &rhs) const {return seconds_ == rhs.seconds_;}
+            bool operator!=(const DayTime &rhs) const {return seconds_ != rhs.seconds_;}
+
             bool operator<(const DayTime &rhs)  const {return seconds_ <  rhs.seconds_;}
             bool operator<=(const DayTime &rhs) const {return seconds_ <= rhs.seconds_;}
             bool operator>(const DayTime &rhs)  const {return seconds_ >  rhs.seconds_;}
             bool operator>=(const DayTime &rhs) const {return seconds_ >= rhs.seconds_;}
+
+            Seconds operator-(const DayTime &rhs) const {return seconds_ - rhs.seconds_;}
+
+            DayTime &operator+=(const Seconds &duration)
+            {
+                seconds_ += duration;
+                return *this;
+            }
+
+            Seconds duration() const {return seconds_;}
 
             unsigned int hours() const {return seconds_.count()/sec_per_hour;}
             unsigned int minutes() const {return (seconds_.count()%sec_per_hour)/sec_per_minute;}
@@ -53,7 +68,6 @@ namespace gubg { namespace time {
                 os << hours() << ':' << minutes() << ':' << seconds();
             }
         private:
-            using Seconds = std::chrono::seconds;
             Seconds seconds_{0};
     };
     inline std::ostream &operator<<(std::ostream &os, const DayTime &dt)
