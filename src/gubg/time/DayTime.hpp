@@ -65,7 +65,9 @@ namespace gubg { namespace time {
 
             void stream(std::ostream &os) const
             {
-                os << hours() << ':' << minutes() << ':' << seconds();
+                const auto flags = os.flags();
+                os << hours() << ':' << std::setfill('0') << std::setw(2) << minutes() << ':' << std::setw(2) << seconds();
+                os.flags(flags);
             }
         private:
             Seconds seconds_{0};

@@ -45,11 +45,15 @@ namespace gubg { namespace debug {
     };
 } } 
 
+#ifdef DEBUG
 #define S(debug_ns) gubg::debug::Scope l_gubg_debug_Scope(std::cout, debug_ns, __func__)
-
 #define L(msg) do { \
     if (l_gubg_debug_Scope.do_log()) \
         l_gubg_debug_Scope.stream() << "   " << msg << std::endl; \
     } while (false)
+#else
+#define S(debug_ns)
+#define L(msg)
+#endif
 
 #endif
