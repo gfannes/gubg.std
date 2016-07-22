@@ -9,6 +9,10 @@ task :help do
     puts('define: build and copy libraries and executables to GUBG::shared')
 end
 
+task :clean do
+    rm_rf '.cache'
+end
+
 task :declare do
     publish('src', pattern: '**/*.h*', dst: 'include')
     Dir.chdir(shared_dir('extern')) do
