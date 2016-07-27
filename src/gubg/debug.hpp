@@ -45,7 +45,15 @@ namespace gubg { namespace debug {
     };
 } } 
 
+#ifndef GUBG_DEBUG_LOG
 #ifdef DEBUG
+#define GUBG_DEBUG_LOG 1
+#else
+#define GUBG_DEBUG_LOG 0
+#endif
+#endif
+
+#if GUBG_DEBUG_LOG
 #define S(debug_ns) gubg::debug::Scope l_gubg_debug_Scope(std::cout, debug_ns, __func__)
 #define L(msg) do { \
     if (l_gubg_debug_Scope.do_log()) \
