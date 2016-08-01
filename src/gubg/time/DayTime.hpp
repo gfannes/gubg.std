@@ -40,6 +40,14 @@ namespace gubg { namespace time {
                 MSS(from_armin(dt, armin));
                 MSS_END();
             }
+            bool from_armin(unsigned int armin)
+            {
+                return DayTime::from_armin(*this, armin);
+            }
+            bool from_armin(const std::string &str)
+            {
+                return DayTime::from_armin(*this, str);
+            }
 
             bool operator==(const DayTime &rhs) const {return seconds_ == rhs.seconds_;}
             bool operator!=(const DayTime &rhs) const {return seconds_ != rhs.seconds_;}
