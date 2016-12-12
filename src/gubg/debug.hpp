@@ -46,10 +46,10 @@ namespace gubg { namespace debug {
 } } 
 
 #ifndef GUBG_DEBUG_LOG
-#ifdef DEBUG
-#define GUBG_DEBUG_LOG 1
-#else
+#ifdef NDEBUG
 #define GUBG_DEBUG_LOG 0
+#else
+#define GUBG_DEBUG_LOG 1
 #endif
 #endif
 
