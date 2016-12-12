@@ -77,7 +77,7 @@ namespace gubg { namespace mss {
     const auto l_rc = (expr); \
     if (!gubg::mss::is_ok(l_rc)) \
     { \
-        L("MSS ERROR: " << #expr << "  failed"); \
+        S("MSS"); L("Error: " #expr << " failed"); \
         return gubg::mss::error_value<l_rc_type>(l_rc); \
     } \
 } while (false)
@@ -85,7 +85,7 @@ namespace gubg { namespace mss {
     const auto l_rc = (expr); \
     if (!gubg::mss::is_ok(l_rc)) \
     { \
-        L("MSS ERROR: " << #expr << "  failed"); \
+        S("MSS"); L("Error: " #expr << " failed"); \
         action; \
         return gubg::mss::error_value<l_rc_type>(l_rc); \
     } \
