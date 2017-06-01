@@ -16,19 +16,19 @@ struct TC_tag{};
 struct WTF_tag{};
 
 //Hierarchy
-struct C
+struct CC
 {
     typedef Null Pubs;
-    C(){S(logns);L("C ctor");}
+    CC(){S(logns);L("CC ctor");}
 };
-struct E: C
+struct E: CC
 {
-    typedef TypeList<NameType<EC_tag, C> > Pubs;
+    typedef TypeList<NameType<EC_tag, CC> > Pubs;
     E(){S(logns);L("E ctor");}
 };
-struct T: C
+struct T: CC
 {
-    typedef TypeList<NameType<TC_tag, C> > Pubs;
+    typedef TypeList<NameType<TC_tag, CC> > Pubs;
     T(){S(logns);L("T ctor");}
 };
 struct LL_: E, T
