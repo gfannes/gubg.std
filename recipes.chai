@@ -1,0 +1,7 @@
+recipe("gubg.std", "func", fun(r){
+    r.add_header("src", "gubg/**.hpp")
+})
+
+recipe("gubg.std", "ut", fun(r){
+    r.add_source("src/test", "**.cpp")
+})
