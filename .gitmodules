@@ -1,0 +1,4 @@
+[submodule "extern/catch"]
+	path = extern/catch
+	url = https://github.com/philsquared/catch
+	branch = master
