@@ -24,7 +24,7 @@ namespace gubg { namespace platform {
                 /* std::freopen("/dev/null", "w", stderr); */
                 /* std::freopen("/dev/null", "w", stdout); */
                 /* execl("/bin/sh", "sh", "-c", command.c_str(), "&>", "/dev/null", (char *)0); */
-                execl("/usr/bin/gvim", (char *)0);
+                execl("/usr/bin/gvim", "/usr/bin/gvim", (char *)0);
                 break;
             default:
                 //Parent process, continue without waiting
