@@ -1,12 +1,16 @@
-recipe("gubg.std", "func", fun(r){
-    r.add_header("src", "gubg/**.hpp")
+add_book("gubg.std", fun(b){
+    b.add_recipe("func", fun(r){
+        r.add_header("src", "gubg/**.hpp")
+    })
+
+    b.add_recipe("ut", fun(r){
+        r.add_source("src/test", "**.cpp")
+    })
 })
 
-recipe("catch", "func", fun(r){
-    r.add_source("src", "catch_runner.cpp")
-    r.add_header("extern/catch/single_include", "*.hpp")
-})
-
-recipe("gubg.std", "ut", fun(r){
-    r.add_source("src/test", "**.cpp")
+add_book("catch", fun(b){
+    b.add_recipe("func", fun(r){
+        r.add_source("src", "catch_runner.cpp")
+        r.add_header("extern/catch/single_include", "*.hpp")
+    })
 })
