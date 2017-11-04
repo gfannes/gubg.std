@@ -1,4 +1,4 @@
-add_book("gubg.std", fun(b){
+open_book("gubg.std", fun(b){
     b.add_recipe("func", fun(r){
         r.add_header("src", "gubg/**.hpp")
     })
@@ -8,7 +8,7 @@ add_book("gubg.std", fun(b){
     })
 })
 
-add_book("catch", fun(b){
+open_book("catch", fun(b){
     b.add_recipe("func", fun(r){
         r.add_source("src", "catch_runner.cpp")
         r.add_header("extern/catch/single_include", "*.hpp")
