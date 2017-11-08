@@ -3,6 +3,7 @@
 
 #include "gubg/macro/stream.hpp"
 #include "gubg/macro/capture.hpp"
+#include <string>
 #include <iostream>
 
 namespace gubg { namespace debug { 

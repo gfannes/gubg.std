@@ -2,8 +2,14 @@
 #include "gubg/mss.hpp"
 #include <cstdlib>
 #include <cstdio>
-#define GUBG_API_LINUX
-#ifdef GUBG_API_LINUX
+
+#if defined(_WIN32) || defined(_WIN64)
+#define GUBG_API_LINUX 0
+#else
+#define GUBG_API_LINUX 1
+#endif
+
+#if GUBG_API_LINUX
 #include <unistd.h>
 #endif
 
@@ -12,7 +18,7 @@ namespace gubg { namespace platform {
     bool spawn(const std::string &command)
     {
         MSS_BEGIN(bool);
-#ifdef GUBG_API_LINUX
+#if GUBG_API_LINUX
         switch (::fork())
         {
             case -1:
