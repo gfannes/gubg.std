@@ -1,6 +1,7 @@
 #ifndef HEADER_gubg_Range_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_Range_hpp_ALREADY_INCLUDED
 
+#include <utility>
 
 #ifdef RANGE
 #error RANGE already defined
@@ -24,12 +25,18 @@ namespace gubg {
 
         bool empty() const {return begin_ == end_;}
         size_t size() const {return end_ - begin_;}
-        reference front() {return *begin_;}
+        reference front() const {return *begin_;}
 
-        It begin() {return begin_;}
-        It end() {return end_;}
+        It begin() const {return begin_;}
+        It end() const { return end_;}
 
         void pop_front() {++begin_;}
+
+        template <typename It2>
+        bool operator==(const Range<It2> & rhs) const
+        {
+            return begin_ == rhs.begin_ && end_ == rhs.end_;
+        }
 
     private:
         Context context_;
@@ -42,6 +49,13 @@ namespace gubg {
     {
         return Range<It>(b, e);
     }
+
+    template <typename It>
+    Range<It> make_range(const std::pair<It, It> & p)
+    {
+        return Range<It>(p.first, p.second);
+    }
+
     template <typename It, typename Context>
     Range<It, Context> make_range(It b, It e, Context &&context)
     {
@@ -51,6 +65,18 @@ namespace gubg {
     Range<It> make_range(It b, size_t nr)
     {
         return Range<It>(b, b+nr);
+    }
+
+    template <typename Container>
+    Range<typename Container::iterator> make_range(Container & container)
+    {
+        return Range<typename Container::iterator>(RANGE(container));
+    }
+
+    template <typename Container>
+    Range<typename Container::const_iterator> make_range(const Container & container)
+    {
+        return Range<typename Container::const_iterator>(RANGE(container));
     }
 } 
 

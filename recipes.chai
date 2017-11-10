@@ -1,4 +1,4 @@
-open_book("gubg.std", fun(b){
+open_book(["gubg", "std"], fun(b){
     b.add_recipe("func", fun(r){
         r.add_header("src", "gubg/**.hpp")
     })
