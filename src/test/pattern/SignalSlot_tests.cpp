@@ -1,10 +1,9 @@
+#include "catch.hpp"
 #include "gubg/pattern/SignalSlot.hpp"
-#include "gubg/Testing.hpp"
+#include "gubg/debug.hpp"
 #include <string>
 #include <sstream>
 
-#define GUBG_MODULE_ "test"
-#include "gubg/log/begin.hpp"
 typedef const std::string & Msg;
 
 class Model
@@ -12,7 +11,7 @@ class Model
     public:
         void setData(int i)
         {
-            S();
+            S("");
             std::ostringstream oss; oss << i;
             data_ = oss.str();
             signal.emit(data_);
@@ -30,15 +29,13 @@ class View
 
         void process(Msg msg)
         {
-            S();L(STREAM(this, msg));
+            S("");L(C(this)C(msg));
         }
         gubg::pattern::Slot<View, Msg> slot;
 };
 
-int main()
+TEST_CASE("gubg::pattern::SignalSlot", "[ut][signal]")
 {
-    TEST_TAG(main);
-
     Model model;
     View view1;
     model.signal.connect(view1.slot);
@@ -48,7 +45,4 @@ int main()
         model.setData(42);
     }
     model.setData(42);
-
-    return 0;
 }
-#include "gubg/log/end.hpp"
