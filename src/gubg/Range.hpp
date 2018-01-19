@@ -2,6 +2,7 @@
 #define HEADER_gubg_Range_hpp_ALREADY_INCLUDED
 
 #include <utility>
+#include <iterator>
 
 #ifdef RANGE
 #error RANGE already defined
