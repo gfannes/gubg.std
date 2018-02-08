@@ -1,36 +1,37 @@
 #ifndef HEADER_gubg_mss_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_mss_hpp_ALREADY_INCLUDED
 
+#include <type_traits>
+
 namespace gubg { namespace mss { 
 
     namespace detail { 
-        template <typename RC>
-            struct Traits
+        template <typename RC> struct Traits
             {
-                static const RC Ok = RC::OK;
-                static const RC Error = RC::Error;
+                static const RC Ok() { return RC::OK;  }
+                static const RC Error() { return RC::Error; }
             };
         template <>
             struct Traits<bool>
             {
-                static const bool Ok = true;
-                static const bool Error = false;
+                static const bool Ok() { return true; }
+                static const bool Error() { return false; }
             };
         template <>
             struct Traits<int>
             {
-                static const int Ok = 0;
-                static const int Error = -1;
+                static const int Ok() { return 0; }
+                static const int Error() { return -1; }
             };
     } 
     template <typename RC>
-        RC ok_value(){return detail::Traits<RC>::Ok;}
+        RC ok_value(){return detail::Traits<RC>::Ok();}
 
     namespace detail { 
         template <typename RC, typename Src>
             struct ErrorValue
             {
-                static RC error_value(Src src){return Traits<RC>::Error;}
+                static RC error_value(Src src){return Traits<RC>::Error();}
             };
         template <typename RC>
             struct ErrorValue<RC, RC>
