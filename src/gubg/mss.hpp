@@ -27,6 +27,18 @@ namespace gubg { namespace mss {
     template <typename RC>
         RC ok_value(){return detail::Traits<RC>::Ok();}
 
+    template <typename RC>
+        bool is_ok(RC rc) {return rc == ok_value<RC>();}
+
+    template <typename T, typename RC>
+        RC on_fail(T v, RC e)
+        {
+            if (is_ok(v))
+                return ok_value<RC>();
+            return e;
+        }
+
+#if 0
     namespace detail { 
         template <typename RC, typename Src>
             struct ErrorValue
@@ -41,17 +53,21 @@ namespace gubg { namespace mss {
     } 
     template <typename RC, typename Src>
         RC error_value(Src src){return detail::ErrorValue<RC, Src>::error_value(src);}
+#endif
 
-    template <typename RC>
-        bool is_ok(RC rc) {return rc == ok_value<RC>();}
+    template <typename Dst, typename Src>
+    void aggregate(Dst &dst, Src src)
+    {
+        if (!is_ok(src))
+            dst = detail::Traits<Dst>::Error();
+    }
+    template <typename T>
+    void aggregate(T &dst, T src)
+    {
+        dst = src;
+    }
 
-    template <typename T, typename RC>
-        RC on_fail(T v, RC e)
-        {
-            if (is_ok(v))
-                return ok_value<RC>();
-            return e;
-        }
+    inline bool is_ok(bool b) {return b;}
 
 } } 
 
@@ -64,10 +80,12 @@ namespace gubg { namespace mss {
 #endif
 #define MSS_BEGIN_1(rc_type) \
     S(nullptr); \
-    using l_rc_type = rc_type
+    using l_gubg_mss_rc_type = rc_type; \
+    l_gubg_mss_rc_type l_gubg_mss_rc_value = gubg::mss::ok_value<l_gubg_mss_rc_type>()
 #define MSS_BEGIN_2(rc_type,logns) \
     S(logns); \
-    using l_rc_type = rc_type
+    using l_gubg_mss_rc_type = rc_type; \
+    l_gubg_mss_rc_type l_gubg_mss_rc_value = gubg::mss::ok_value<l_gubg_mss_rc_type>()
 #define MSS_BEGIN(...) GUBG_GET_ARG_3((__VA_ARGS__, MSS_BEGIN_2,MSS_BEGIN_1))(__VA_ARGS__)
 
 //MSS
@@ -75,20 +93,20 @@ namespace gubg { namespace mss {
 #error MSS macros already defined
 #endif
 #define MSS_1(expr) do { \
-    const auto l_rc = (expr); \
-    if (!gubg::mss::is_ok(l_rc)) \
+    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
+    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
     { \
         S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
-        return gubg::mss::error_value<l_rc_type>(l_rc); \
+        return l_gubg_mss_rc_value; \
     } \
 } while (false)
 #define MSS_2(expr,action) do { \
-    const auto l_rc = (expr); \
-    if (!gubg::mss::is_ok(l_rc)) \
+    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
+    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
     { \
         S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
         action; \
-        return gubg::mss::error_value<l_rc_type>(l_rc); \
+        return l_gubg_mss_rc_value; \
     } \
 } while (false)
 #define MSS(...) GUBG_GET_ARG_3((__VA_ARGS__, MSS_2,MSS_1))(__VA_ARGS__)
@@ -98,18 +116,18 @@ namespace gubg { namespace mss {
 #error MSS_Q macros already defined
 #endif
 #define MSS_Q_1(expr) do { \
-    const auto l_rc = (expr); \
-    if (!gubg::mss::is_ok(l_rc)) \
+    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
+    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
     { \
-        return gubg::mss::error_value<l_rc_type>(l_rc); \
+        return l_gubg_mss_rc_value; \
     } \
 } while (false)
 #define MSS_Q_2(expr,action) do { \
-    const auto l_rc = (expr); \
-    if (!gubg::mss::is_ok(l_rc)) \
+    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
+    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
     { \
         action; \
-        return gubg::mss::error_value<l_rc_type>(l_rc); \
+        return l_gubg_mss_rc_value; \
     } \
 } while (false)
 #define MSS_Q(...) GUBG_GET_ARG_3((__VA_ARGS__, MSS_Q_2,MSS_Q_1))(__VA_ARGS__)
@@ -118,12 +136,12 @@ namespace gubg { namespace mss {
 #if defined(MSS_END)
 #error MSS_END macros already defined
 #endif
-#define MSS_END() return gubg::mss::ok_value<l_rc_type>()
+#define MSS_END() return l_gubg_mss_rc_value
 
 //MSS_RETURN_OK
 #if defined(MSS_RETURN_OK)
 #error MSS_RETURN_OK macros already defined
 #endif
-#define MSS_RETURN_OK() return gubg::mss::ok_value<l_rc_type>()
+#define MSS_RETURN_OK() return l_gubg_mss_rc_value
 
 #endif
