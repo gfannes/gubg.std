@@ -38,23 +38,6 @@ namespace gubg { namespace mss {
             return e;
         }
 
-#if 0
-    namespace detail { 
-        template <typename RC, typename Src>
-            struct ErrorValue
-            {
-                static RC error_value(Src src){return Traits<RC>::Error();}
-            };
-        template <typename RC>
-            struct ErrorValue<RC, RC>
-            {
-                static RC error_value(RC src){return src;}
-            };
-    } 
-    template <typename RC, typename Src>
-        RC error_value(Src src){return detail::ErrorValue<RC, Src>::error_value(src);}
-#endif
-
     template <typename Dst, typename Src>
     void aggregate(Dst &dst, Src src)
     {
@@ -66,8 +49,6 @@ namespace gubg { namespace mss {
     {
         dst = src;
     }
-
-    inline bool is_ok(bool b) {return b;}
 
 } } 
 
