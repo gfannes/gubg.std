@@ -55,6 +55,12 @@ namespace gubg { namespace mss {
 #include "gubg/macro/variadic.h"
 #include "gubg/debug.hpp"
 
+//MSS_RC
+#if defined(MSS_RC)
+#error MSS_BEGIN macros already defined
+#endif
+#define MSS_RC l_gubg_mss_rc_value
+
 //MSS_BEGIN
 #if defined(MSS_BEGIN) || defined(MSS_BEGIN_1) || defined(MSS_BEGIN_2)
 #error MSS_BEGIN macros already defined
@@ -62,67 +68,84 @@ namespace gubg { namespace mss {
 #define MSS_BEGIN_1(rc_type) \
     S(nullptr); \
     using l_gubg_mss_rc_type = rc_type; \
-    l_gubg_mss_rc_type l_gubg_mss_rc_value = gubg::mss::ok_value<l_gubg_mss_rc_type>()
+    l_gubg_mss_rc_type MSS_RC = gubg::mss::ok_value<l_gubg_mss_rc_type>()
 #define MSS_BEGIN_2(rc_type,logns) \
     S(logns); \
     using l_gubg_mss_rc_type = rc_type; \
-    l_gubg_mss_rc_type l_gubg_mss_rc_value = gubg::mss::ok_value<l_gubg_mss_rc_type>()
+    l_gubg_mss_rc_type MSS_RC = gubg::mss::ok_value<l_gubg_mss_rc_type>()
 #define MSS_BEGIN(...) GUBG_GET_ARG_3((__VA_ARGS__, MSS_BEGIN_2,MSS_BEGIN_1))(__VA_ARGS__)
 
 //MSS
-#if defined(MSS) || defined(MSS_1) || defined(MSS_2)
+#if defined(MSS) || defined(MSS_1) || defined(MSS_2) || defined(MSS_3)
 #error MSS macros already defined
 #endif
 #define MSS_1(expr) do { \
-    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
-    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
+    gubg::mss::aggregate(MSS_RC, (expr)); \
+    if (!gubg::mss::is_ok(MSS_RC)) \
     { \
         S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
-        return l_gubg_mss_rc_value; \
+        return MSS_RC; \
     } \
 } while (false)
 #define MSS_2(expr,action) do { \
-    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
-    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
+    gubg::mss::aggregate(MSS_RC, (expr)); \
+    if (!gubg::mss::is_ok(MSS_RC)) \
     { \
         S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
         action; \
-        return l_gubg_mss_rc_value; \
+        return MSS_RC; \
     } \
 } while (false)
-#define MSS(...) GUBG_GET_ARG_3((__VA_ARGS__, MSS_2,MSS_1))(__VA_ARGS__)
+#define MSS_3(expr,action,aggregator) do { \
+    aggregator(MSS_RC, (expr)); \
+    if (!gubg::mss::is_ok(MSS_RC)) \
+    { \
+        S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
+        action; \
+        return MSS_RC; \
+    } \
+} while (false)
+#define MSS(...) GUBG_GET_ARG_4((__VA_ARGS__, MSS_3,MSS_2,MSS_1))(__VA_ARGS__)
 
 //MSS_Q
-#if defined(MSS_Q) || defined(MSS_Q_1) || defined(MSS_Q_2)
+#if defined(MSS_Q) || defined(MSS_Q_1) || defined(MSS_Q_2) || defined(MSS_Q_3)
 #error MSS_Q macros already defined
 #endif
 #define MSS_Q_1(expr) do { \
-    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
-    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
+    gubg::mss::aggregate(MSS_RC, (expr)); \
+    if (!gubg::mss::is_ok(MSS_RC)) \
     { \
-        return l_gubg_mss_rc_value; \
+        return MSS_RC; \
     } \
 } while (false)
 #define MSS_Q_2(expr,action) do { \
-    gubg::mss::aggregate(l_gubg_mss_rc_value, (expr)); \
-    if (!gubg::mss::is_ok(l_gubg_mss_rc_value)) \
+    gubg::mss::aggregate(MSS_RC, (expr)); \
+    if (!gubg::mss::is_ok(MSS_RC)) \
     { \
         action; \
-        return l_gubg_mss_rc_value; \
+        return MSS_RC; \
     } \
 } while (false)
-#define MSS_Q(...) GUBG_GET_ARG_3((__VA_ARGS__, MSS_Q_2,MSS_Q_1))(__VA_ARGS__)
+#define MSS_Q_3(expr,action,aggregator) do { \
+    aggregator(MSS_RC, (expr)); \
+    if (!gubg::mss::is_ok(MSS_RC)) \
+    { \
+        action; \
+        return MSS_RC; \
+    } \
+} while (false)
+#define MSS_Q(...) GUBG_GET_ARG_4((__VA_ARGS__, MSS_Q_3,MSS_Q_2,MSS_Q_1))(__VA_ARGS__)
 
 //MSS_END
 #if defined(MSS_END)
 #error MSS_END macros already defined
 #endif
-#define MSS_END() return l_gubg_mss_rc_value
+#define MSS_END() return MSS_RC
 
 //MSS_RETURN_OK
 #if defined(MSS_RETURN_OK)
 #error MSS_RETURN_OK macros already defined
 #endif
-#define MSS_RETURN_OK() return l_gubg_mss_rc_value
+#define MSS_RETURN_OK() return MSS_RC
 
 #endif
