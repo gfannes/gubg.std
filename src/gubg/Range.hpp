@@ -21,6 +21,7 @@ namespace gubg {
     public:
         using reference = typename std::iterator_traits<It>::value_type;
 
+        Range() {}
         Range(It b, It e): begin_(b), end_(e) {}
         Range(It b, It e, Context &&context): context_(std::move(context)), begin_(b), end_(e) {}
 
