@@ -28,6 +28,7 @@ namespace gubg {
         bool empty() const {return begin_ == end_;}
         size_t size() const {return end_ - begin_;}
         reference front() const {return *begin_;}
+        reference back() const {return *std::prev(end_);}
 
         It begin() const {return begin_;}
         It end() const { return end_;}

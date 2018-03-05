@@ -11,6 +11,8 @@ TEST_CASE("gubg::Range tests with default context", "[ut][gubg][Range]")
     int ary[nr] = {1,2,3};
 
     auto r = make_range(ary, nr); 
+    REQUIRE(r.front() == 1);
+    REQUIRE(r.back() == 3);
 
     size_t i = 0;
     for (auto e: r)
