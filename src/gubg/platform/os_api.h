@@ -6,6 +6,12 @@
 #define GUBG_API_LINUX
 #define GUBG_API_POSIX
 #endif//__linux
+
+#ifdef __APPLE__
+#define GUBG_API_APPLE
+#define GUBG_API_POSIX
+#endif//__APPLE__
+
 #ifdef _WIN32
 #define GUBG_API_WIN32
 #ifdef __MINGW32__
