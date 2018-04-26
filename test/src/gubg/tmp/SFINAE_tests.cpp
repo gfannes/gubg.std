@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "gubg/tmp/Types.hpp"
 #include "gubg/tmp/SFINAE.hpp"
-#include "gubg/tmp/Equal.hpp"
+#include <type_traits>
 #include <utility>
 using namespace gubg::tmp;
 
@@ -68,6 +68,6 @@ TEST_CASE("SFINAE", "[ut][tmp]")
 {
     REQUIRE(DetectX<HasFoo>::value);
     REQUIRE(!DetectX<HasNotFoo>::value);
-    REQUIRE((Equal<HasUsedMemoryMethod<HasUsedMemory>::Value, HasMethod>::Value));
-    REQUIRE((Equal<HasUsedMemoryMethod<HasNotUsedMemory>::Value, HasNotMethod>::Value));
+    REQUIRE((std::is_same<HasUsedMemoryMethod<HasUsedMemory>::Value, HasMethod>::value));
+    REQUIRE((std::is_same<HasUsedMemoryMethod<HasNotUsedMemory>::Value, HasNotMethod>::value));
 }
