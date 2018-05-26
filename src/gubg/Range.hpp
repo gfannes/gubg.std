@@ -19,7 +19,7 @@ namespace gubg {
     class Range
     {
     public:
-        using reference = typename std::iterator_traits<It>::value_type;
+        using reference = typename std::iterator_traits<It>::reference;
 
         Range() {}
         Range(It b, It e): begin_(b), end_(e) {}
