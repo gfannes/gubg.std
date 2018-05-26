@@ -20,20 +20,42 @@ namespace gubg {
     {
     public:
         using reference = typename std::iterator_traits<It>::reference;
+        using iterator_category = typename std::iterator_traits<It>::iterator_category;
 
         Range() {}
         Range(It b, It e): begin_(b), end_(e) {}
         Range(It b, It e, Context &&context): context_(std::move(context)), begin_(b), end_(e) {}
 
-        bool empty() const {return begin_ == end_;}
-        size_t size() const {return end_ - begin_;}
-        reference front() const {return *begin_;}
-        reference back() const {return *std::prev(end_);}
+        bool empty() const 
+        {
+            return begin_ == end_;
+        }
+        size_t size(std::enable_if_t<std::is_convertible<iterator_category, std::random_access_iterator_tag>::value> * /*dummy*/ = nullptr) const 
+        {
+            return end_ - begin_;
+        }
+        reference front() const 
+        {
+            return *begin_;
+        }
+        reference back() const 
+        {
+            return *std::prev(end_);
+        }
 
-        It begin() const {return begin_;}
-        It end() const { return end_;}
+        It begin() const 
+        {
+            return begin_;
+        }
+        It end() const 
+        { 
+            return end_;
+        }
 
-        void pop_front() {++begin_;}
+        void pop_front() 
+        {
+            ++begin_;
+        }
 
         template <typename It2>
         bool operator==(const Range<It2> & rhs) const

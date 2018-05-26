@@ -6,9 +6,44 @@
 
 namespace gubg { namespace iterator { 
     
-    template <typename Iterator, typename Functor> class Transform;
+    template <typename Iterator, typename Functor, bool dereference = true> class Transform;
     
     namespace detail {
+
+        template <typename Functor, bool dereference>
+        struct Transformer
+        {
+            template <typename It>
+            using result_type = std::result_of_t<Functor(typename std::iterator_traits<It>::reference)>;
+
+            Transformer(Functor f = Functor()) : f_(f) {}
+
+            template <typename Iterator>
+            result_type<Iterator> apply(Iterator it) const
+            {
+                return f_(*it);
+            }
+            operator const Functor &() const { return f_; }
+
+            Functor f_;
+        };
+        
+        template <typename Functor>
+        struct Transformer<Functor, false>
+        {
+            template <typename It>
+            using result_type = std::result_of_t<Functor(It)>;
+
+            Transformer(Functor f = Functor()) : f_(f) {}
+            template <typename Iterator>
+            result_type<Iterator> apply(Iterator it) const
+            
+            {
+                return f_(it);
+            }
+
+            Functor f_;
+        };
 
     template <typename Reference, typename Pointer> struct arrow_operator_dispatch
     {
@@ -33,13 +68,14 @@ namespace gubg { namespace iterator {
         static type apply(ValueType & value) { return std::addressof(value); }
     };
 
-    template <typename Derived, typename Iterator, typename Functor, typename Tag> class Transform;
+    template <typename Derived, typename Iterator, typename Transformer, typename Tag> class Transform;
 
 
-    template <typename Derived, typename Iterator, typename Functor> class Transform<Derived, Iterator, Functor, std::input_iterator_tag>
+    template <typename Derived, typename Iterator, typename Transformer> 
+    class Transform<Derived, Iterator, Transformer, std::input_iterator_tag>
     {
         public:
-            using result_type = std::result_of_t<Functor(typename std::iterator_traits<Iterator>::reference)>;
+            using result_type = typename Transformer::template result_type<Iterator>;
             using arrow_dispatch = detail::arrow_operator_dispatch<result_type, std::remove_reference_t<result_type> *>;
 
         public:
@@ -51,32 +87,32 @@ namespace gubg { namespace iterator {
 
         public:
             template <typename It>
-            explicit Transform(It it, Functor functor) 
+            explicit Transform(It it, Transformer functor) 
             : base_(it),transform_(functor) 
             {
             }
 
 
             template <typename D, typename I>
-            bool operator==(const Transform<D, I, Functor, std::input_iterator_tag> & rhs) const 
+            bool operator==(const Transform<D, I, Transformer, std::input_iterator_tag> & rhs) const 
             { 
                 return base() == rhs.base(); 
             }
 
             template <typename D, typename I>
-            bool operator!=(const Transform<D, I, Functor, std::input_iterator_tag> & rhs) const 
+            bool operator!=(const Transform<D, I, Transformer, std::input_iterator_tag> & rhs) const 
             { 
                 return base() != rhs.base(); 
             }
 
             reference operator*() const 
             { 
-                return transform_(*base()); 
+                return transform_.apply(base()); 
             }
 
             pointer operator->() const 
             { 
-                return pointer(transform_(*base())); 
+                return pointer(this->operator*()); 
             }
 
             Derived & operator++() 
@@ -97,35 +133,37 @@ namespace gubg { namespace iterator {
 
         private:
             template <typename D, typename I, typename F, typename T> friend class Transform;
-            template <typename I, typename F> friend class iterator::Transform;
+            template <typename I, typename F, bool d> friend class iterator::Transform;
 
             Iterator base_;
-            Functor transform_;
+            Transformer transform_;
     };
 
-    template <typename Derived, typename Iterator, typename Functor> class Transform<Derived, Iterator, Functor, std::forward_iterator_tag>
-    : public Transform<Derived, Iterator, Functor, std::input_iterator_tag>
+    template <typename Derived, typename Iterator, typename Transformer> 
+    class Transform<Derived, Iterator, Transformer, std::forward_iterator_tag>
+    : public Transform<Derived, Iterator, Transformer, std::input_iterator_tag>
     {
-        using Base = Transform<Derived, Iterator, Functor, std::input_iterator_tag>;
+        using Base = Transform<Derived, Iterator, Transformer, std::input_iterator_tag>;
 
         public:
             template <typename It>
-            explicit Transform(It it, Functor functor) 
-            : Transform<Derived, Iterator, Functor, std::input_iterator_tag>(it, functor) 
+            explicit Transform(It it, Transformer transform) 
+            : Base(it, transform) 
             {
 
             }
     };
 
-    template <typename Derived, typename Iterator, typename Functor> class Transform<Derived, Iterator, Functor, std::bidirectional_iterator_tag>
-    : public Transform<Derived, Iterator, Functor, std::forward_iterator_tag>
+    template <typename Derived, typename Iterator, typename Transformer> 
+    class Transform<Derived, Iterator, Transformer, std::bidirectional_iterator_tag>
+    : public Transform<Derived, Iterator, Transformer, std::forward_iterator_tag>
     {
-        using Base = Transform<Derived, Iterator, Functor, std::forward_iterator_tag>;
+        using Base = Transform<Derived, Iterator, Transformer, std::forward_iterator_tag>;
 
         public:
             template <typename It>
-            explicit Transform(It it, Functor functor) 
-            : Transform<Derived, Iterator, Functor, std::forward_iterator_tag>(it, functor) 
+            explicit Transform(It it, Transformer transform) 
+            : Base(it, transform) 
             {
 
             }
@@ -142,15 +180,16 @@ namespace gubg { namespace iterator {
             }
     };
 
-    template <typename Derived, typename Iterator, typename Functor> class Transform<Derived, Iterator, Functor, std::random_access_iterator_tag>
-    : public Transform<Derived, Iterator, Functor, std::bidirectional_iterator_tag>
+    template <typename Derived, typename Iterator, typename Transformer> 
+    class Transform<Derived, Iterator, Transformer, std::random_access_iterator_tag>
+    : public Transform<Derived, Iterator, Transformer, std::bidirectional_iterator_tag>
     {
-        using Base = Transform<Derived, Iterator, Functor, std::bidirectional_iterator_tag>;
+        using Base = Transform<Derived, Iterator, Transformer, std::bidirectional_iterator_tag>;
 
         public:
             template <typename It>
-            explicit Transform(It it, Functor functor) 
-            : Transform<Derived, Iterator, Functor, std::bidirectional_iterator_tag>(it, functor) 
+            explicit Transform(It it, Transformer transform) 
+            : Base(it, transform) 
             {
             }
 
@@ -204,29 +243,30 @@ namespace gubg { namespace iterator {
             }
     };
 
-    template <typename Derived, typename Iterator, typename Functor> 
-    Derived operator+(typename Derived::difference_type n, const Transform<Derived, Iterator, Functor, std::random_access_iterator_tag> & it)
+    template <typename Derived, typename Iterator, typename Transformer> 
+    Derived operator+(typename Derived::difference_type n, const Transform<Derived, Iterator, Transformer, std::random_access_iterator_tag> & it)
     {
         return it + n;
     }
 } 
 
-    template <typename Iterator, typename Functor>
+    template <typename Iterator, typename Functor, bool dereference>
     class Transform 
-    : public detail::Transform<Transform<Iterator, Functor>, Iterator, Functor, typename std::iterator_traits<Iterator>::iterator_category>
+    : public detail::Transform<Transform<Iterator, Functor, dereference>, Iterator, detail::Transformer<Functor, dereference>, typename std::iterator_traits<Iterator>::iterator_category>
     {
-        using Base = detail::Transform<Transform<Iterator, Functor>, Iterator, Functor, typename std::iterator_traits<Iterator>::iterator_category>;
+        using Transformer = detail::Transformer<Functor, dereference>;
+        using Base = detail::Transform<Transform<Iterator, Functor, dereference>, Iterator, Transformer, typename std::iterator_traits<Iterator>::iterator_category>;
 
     public:
         Transform()
-        : Base(Iterator(), Functor())
+        : Base(Iterator(), Transformer())
         {
 
         }
         
         template <typename It>
         explicit Transform(It it, Functor f = Functor())
-        : Base(it, f)
+        : Base(it, Transformer(f))
         {
         }
 
