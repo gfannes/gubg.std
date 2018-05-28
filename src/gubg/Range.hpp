@@ -27,7 +27,11 @@ namespace gubg {
         Range(It b, It e, Context &&context): context_(std::move(context)), begin_(b), end_(e) {}
 
         bool empty() const { return begin_ == end_; }
-        size_t size(){return end_ - begin_;}
+        size_t size() const 
+        { 
+            static_assert(std::is_convertible<iterator_category, std::random_access_iterator_tag>::value, "Size will not work as It is not a random access iterator");
+            return end_ - begin_; 
+        }
         reference front() const { return *begin_; }
         reference back() const { return *std::prev(end_); }
 

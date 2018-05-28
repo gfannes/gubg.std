@@ -2,6 +2,7 @@
 #include "gubg/Range.hpp"
 #include <iostream>
 #include <memory>
+#include <list>
 using namespace gubg;
 using namespace std;
 
@@ -39,3 +40,13 @@ TEST_CASE("gubg::Range tests with non-default context", "[ut][gubg][Range]")
     }
     cout << endl;
 }
+TEST_CASE("gubg::Range tests for non-random access iterators", "[ut][gubg][Range]")
+{
+    std::list<char> lst {'a','b','c'};
+    auto rng = make_range(lst);
+
+    REQUIRE(lst.front() == 'a');
+
+    // should not work, as size require a random acces iterator
+    // rng.size();
+}   
