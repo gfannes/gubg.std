@@ -20,4 +20,17 @@
 #endif//__MINGW32__
 #endif//_WIN32
 
+#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)
+#define GUBG_OS_WINDOWS 1
+#endif
+
+#if defined(linux) || defined(__linux)
+#define GUBG_OS_LINUX 1
+#endif
+
+#if defined(macintosh) || defined(Macintosh) || defined(__APPLE__) || defined(__MACH__)
+#define GUBG_OS_MACOS 1
+#endif
+
+
 #endif
