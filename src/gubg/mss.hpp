@@ -148,4 +148,31 @@ namespace gubg { namespace mss {
 #endif
 #define MSS_RETURN_OK() return MSS_RC
 
+//AGG: macros similar to MSS, but using the external "rc" variable to aggregate the error state, and without the return statement
+#if defined(AGG) || defined(AGG_1) || defined(AGG_2) || defined(AGG_3)
+#error AGG macros already defined
+#endif
+#define AGG_1(rc) \
+    static_assert(false, "AGG cannot run without expression")
+#define AGG_2(rc, expr) do { \
+    if (gubg::mss::is_ok(rc)) { \
+        gubg::mss::aggregate(rc, (expr)); \
+        if (!gubg::mss::is_ok(rc)) \
+        { \
+            S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
+        } \
+    } \
+} while (false)
+#define AGG_3(rc, expr, action) do { \
+    if (gubg::mss::is_ok(rc)) { \
+        gubg::mss::aggregate(rc, (expr)); \
+        if (!gubg::mss::is_ok(rc)) \
+        { \
+            S("MSS"); L("Error: " #expr << " failed in \"" << __FILE__ << ":" << __LINE__ << "\""); \
+            action; \
+        } \
+    } \
+} while (false)
+#define AGG(...) GUBG_GET_ARG_4((__VA_ARGS__, AGG_3,AGG_2,AGG_1))(__VA_ARGS__)
+
 #endif
