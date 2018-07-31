@@ -4,7 +4,7 @@ root.book("catch", fun(b){
         r.add("extern/catch/single_include/catch2", "*.hpp")
     })
 
-    b.recipe("runner", fun(r){
+    b.recipe("runner", TargetType.Executable, fun(r){
         r.depends_on("func")
         r.add("src", "catch_runner.cpp")
     })
