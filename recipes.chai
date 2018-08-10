@@ -1,6 +1,5 @@
 root.book("catch", fun(b){
     b.recipe("func", fun(r){
-        print(cook.script_local_directory)
         r.add("extern/catch/single_include/catch2", "*.hpp")
     })
 
