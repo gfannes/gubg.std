@@ -18,7 +18,19 @@ namespace std {
 
         ~optional() { clear_(); }
 
+        void reset() { clear_(); }
+
+        void emplace() { goc_(); }
+
         Self &operator=(const T &v) { goc_() = v; return *this; }
+
+        operator bool() const {return !!ptr_;}
+
+        const T &operator*() const {return *ptr_;}
+        T &operator*() {return *ptr_;}
+
+        const T *operator->() const {return ptr_;}
+        T *operator->() {return ptr_;}
 
     private:
         T &goc_()
