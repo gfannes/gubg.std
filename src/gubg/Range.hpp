@@ -35,6 +35,9 @@ namespace gubg {
         reference front() const { return *begin_; }
         reference back() const { return *std::prev(end_); }
 
+        reference operator[](size_t ix) {return *(begin_+ix);}
+        const reference operator[](size_t ix) const {return *(begin_+ix);}
+
         It begin() const { return begin_; }
         It end() const { return end_; }
 
