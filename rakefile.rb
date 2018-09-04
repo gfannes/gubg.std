@@ -1,6 +1,6 @@
 task :prepare do
     Dir.chdir("extern") do
-        sh "git submodule update --init catch"
+        sh "git submodule update --init extern/catch2"
     end
 end
 
