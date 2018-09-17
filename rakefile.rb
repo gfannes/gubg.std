@@ -3,3 +3,6 @@ task :prepare do
 end
 
 task :run
+task :proper do
+    rm_rf "extern"
+end
