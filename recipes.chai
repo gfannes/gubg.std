@@ -1,6 +1,6 @@
 root.book("catch", fun(b){
     b.recipe("func", fun(r){
-        r.add("extern/catch2/single_include", "*.hpp")
+        r.add("extern/catch2/single_include/catch2", "*.hpp")
     })
 
     b.recipe("runner", TargetType.Executable, fun(r){
