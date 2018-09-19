@@ -8,6 +8,7 @@ task :prepare do
 end
 
 task :run
+task :clean
 task :proper do
     rm_rf "extern"
 end
