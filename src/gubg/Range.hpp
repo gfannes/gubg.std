@@ -19,6 +19,7 @@ namespace gubg {
     class Range
     {
     public:
+        using value_type = typename std::iterator_traits<It>::value_type;
         using reference = typename std::iterator_traits<It>::reference;
         using iterator_category = typename std::iterator_traits<It>::iterator_category;
 
@@ -42,6 +43,7 @@ namespace gubg {
         It end() const { return end_; }
 
         void pop_front() { ++begin_; }
+        void pop_front(size_t nr) { begin_ += nr; }
 
         template <typename It2>
         bool operator==(const Range<It2> & rhs) const
