@@ -3,9 +3,13 @@ root.book("catch", fun(b){
         r.add("extern/catch2/single_include/catch2", "*.hpp")
     })
 
-    b.recipe("runner", TargetType.Executable, fun(r){
+    b.recipe("main", fun(r) {
         r.depends_on("func")
         r.add("src", "catch_runner.cpp")
+    })
+
+    b.recipe("runner", TargetType.Executable, fun(r){
+        r.depends_on("main")
     })
 })
 
