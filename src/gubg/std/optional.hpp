@@ -1,13 +1,13 @@
 #ifndef HEADER_gubg_std_optional_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_std_optional_hpp_ALREADY_INCLUDED
 
-#include "gubg/platform/compiler_info.h"
+#include "gubg/platform.h"
 
-#ifdef GUBG_CC_GCC
+#if GUBG_PLATFORM_COMPILER_GCC
 #include <optional>
 #endif
 
-#ifdef GUBG_CC_MSC
+#if GUBG_PLATFORM_COMPILER_MSVC
 #include <array>
 namespace std { 
     template <typename T>
