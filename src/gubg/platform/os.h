@@ -16,6 +16,7 @@
 #if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)
 #define GUBG_PLATFORM_OS "windows"
 #define GUBG_PLATFORM_OS_WINDOWS 1
+#define GUBG_PLATFORM_API_WIN32 1
 #ifdef __MINGW32__
 #define GUBG_PLATFORM_API_MINGW 1
 #define GUBG_PLATFORM_API_POSIX 1
