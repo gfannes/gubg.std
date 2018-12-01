@@ -23,4 +23,15 @@
 #endif
 #endif
 
+#if defined(ARDUINO)
+#define GUBG_PLATFORM_OS "arduino"
+#define GUBG_PLATFORM_OS_ARDUINO 1
+#if defined(ARDUINO_AVR_MEGA2560)
+#define GUBG_PLATFORM_ARDUINO_MEGA 1
+#endif
+#if defined(ARDUINO_AVR_UNO)
+#define GUBG_PLATFORM_ARDUINO_UNO 1
+#endif
+#endif
+
 #endif
