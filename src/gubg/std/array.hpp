@@ -16,6 +16,11 @@ namespace std {
 
         const T *data() const {return data_;}
 
+        const T *begin() const {return data_;}
+        const T *end() const {return begin()+size();}
+        T *begin() {return data_;}
+        T *end() {return begin()+size();}
+
     private:
         T data_[Size]{};
     };
