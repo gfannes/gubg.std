@@ -1,5 +1,5 @@
-#ifndef HEADER_gubg_debug_hpp_ALREADY_INCLUDED
-#define HEADER_gubg_debug_hpp_ALREADY_INCLUDED
+#ifndef HEADER_gubg_debug_cout_hpp_ALREADY_INCLUDED
+#define HEADER_gubg_debug_cout_hpp_ALREADY_INCLUDED
 
 #include "gubg/macro/stream.hpp"
 #include "gubg/macro/capture.hpp"
