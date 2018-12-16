@@ -10,6 +10,11 @@ namespace std {
     class array
     {
     public:
+        array()
+        {
+            for (size_t ix = 0; ix < Size; ++ix)
+                data_[ix] = T{};
+        }
         size_t size() const {return Size;}
 
         T &operator[](size_t ix) {return data_[ix];}
