@@ -1,6 +1,7 @@
 #ifndef HEADER_gubg_Signal_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_Signal_hpp_ALREADY_INCLUDED
 
+#include <functional>
 #include <list>
 
 namespace gubg { 
