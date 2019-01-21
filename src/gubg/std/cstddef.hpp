@@ -16,7 +16,10 @@ namespace std {
 #if GUBG_PLATFORM_COMPILER_MSVC
 #include <cstddef>
 namespace std { 
+    //Not sure if this check is strict enough, at least, on 14.14.26428, std::byte seems to be known
+#if GUBG_PLATFORM_COMPILER_VERSION < 191426
     enum class byte: unsigned char {};
+#endif
 } 
 #endif
 
