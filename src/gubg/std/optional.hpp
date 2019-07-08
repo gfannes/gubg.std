@@ -8,7 +8,8 @@
 #endif
 
 #if GUBG_PLATFORM_COMPILER_MSVC
-#include <array>
+#if GUBG_PLATFORM_COMPILER_VERSION >= 192000
+#else
 namespace std { 
     template <typename T>
     class optional
@@ -52,6 +53,7 @@ namespace std {
         std::array<char, sizeof(T)> buffer_;
     };
 } 
+#endif
 #endif
 
 #endif
