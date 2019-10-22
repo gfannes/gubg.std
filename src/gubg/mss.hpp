@@ -1,6 +1,8 @@
 #ifndef HEADER_gubg_mss_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_mss_hpp_ALREADY_INCLUDED
 
+#include <gubg/Tribool.hpp>
+
 namespace gubg { namespace mss { 
 
     namespace detail { 
@@ -20,6 +22,12 @@ namespace gubg { namespace mss {
             {
                 static const int Ok() { return 0; }
                 static const int Error() { return -1; }
+            };
+        template <>
+            struct Traits<Tribool>
+            {
+                static const Tribool Ok() { return true; }
+                static const Tribool Error() { return false; }
             };
     } 
     template <typename RC>
