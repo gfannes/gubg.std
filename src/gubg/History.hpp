@@ -48,7 +48,7 @@ namespace gubg {
             begin_[ix+size_] = v;
         }
 
-        void push(const T &v)
+        void push_pop(const T &v)
         {
             if (empty())
                 return;
