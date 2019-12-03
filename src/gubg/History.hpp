@@ -12,6 +12,34 @@ namespace gubg {
     class History
     {
     public:
+        using Self = History<T>;
+
+        History() {}
+        History(const Self &rhs)
+        {
+            data_ = rhs.data_;
+            size_ = rhs.size_;
+            if (size_ == 0)
+                begin_ = nullptr;
+            else
+                //We cannot simply copy begin_, it is relative wrt data_
+                begin_ = data_.data()+(rhs.begin_-rhs.data_.data());
+        }
+        Self &operator=(const Self &rhs)
+        {
+            if (&rhs != this)
+            {
+                data_ = rhs.data_;
+                size_ = rhs.size_;
+                if (size_ == 0)
+                    begin_ = nullptr;
+                else
+                    //We cannot simply copy begin_, it is relative wrt data_
+                    begin_ = data_.data()+(rhs.begin_-rhs.data_.data());
+            }
+            return *this;
+        }
+
         bool empty() const {return size_ == 0;}
         std::size_t size() const {return size_;}
 
@@ -39,6 +67,17 @@ namespace gubg {
         {
             assert(ix < size_);
             return begin_[ix];
+        }
+
+        const T &front() const
+        {
+            assert(size_ > 0);
+            return begin_[0];
+        }
+        const T &back() const
+        {
+            assert(size_ > 0);
+            return begin_[size_-1];
         }
 
         void set(std::size_t ix, const T &v)
