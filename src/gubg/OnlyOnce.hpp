@@ -3,26 +3,25 @@
 
 namespace gubg
 {
-    struct OnlyOnce
+    class OnlyOnce
     {
-        OnlyOnce():
-            firstTime_(true){}
-        OnlyOnce(bool firstTime):
-            firstTime_(firstTime){}
+    public:
+        OnlyOnce() {}
+        OnlyOnce(bool first_time): first_time_(first_time) {}
 
         bool operator()()
         {
-            bool ft = firstTime_;
-            firstTime_ = false;
-            return ft;
+            const bool res = first_time_;
+            first_time_ = false;
+            return res;
         }
 
-        bool check() const {return firstTime_;}
+        bool check() const {return first_time_;}
 
-        void reset(){firstTime_ = true;}
+        void reset() {first_time_ = true;}
 
-        private:
-            bool firstTime_;
+    private:
+        bool first_time_ = true;
     };
 }
 
