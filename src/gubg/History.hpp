@@ -25,6 +25,10 @@ namespace gubg {
                 //We cannot simply copy begin_, it is relative wrt data_
                 begin_ = data_.data()+(rhs.begin_-rhs.data_.data());
         }
+        History(std::size_t size)
+        {
+            resize(size);
+        }
         Self &operator=(const Self &rhs)
         {
             if (&rhs != this)
