@@ -10,6 +10,9 @@
 #if GUBG_PLATFORM_COMPILER_MSVC
 #if GUBG_PLATFORM_COMPILER_VERSION >= 192000
 #else
+
+#include <array>
+
 namespace std { 
     template <typename T>
     class optional
