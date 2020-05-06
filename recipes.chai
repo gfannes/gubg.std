@@ -7,10 +7,6 @@ root.book("catch", fun(b){
         r.depends_on("func")
         r.add("src", "catch_runner.cpp")
     })
-
-    b.recipe("runner", TargetType.Executable, fun(r){
-        r.depends_on("main")
-    })
 })
 
 root.book("gubg/std", fun(b){
