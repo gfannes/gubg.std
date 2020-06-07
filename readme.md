@@ -3,7 +3,7 @@ gubg.std
 
 Standard functionality from GUBG that evrybody should need
 
-# License
+## License
 
 This software is licensed under the EUPL v1.1 license with the explicit interpretation of the term _modification_ as explained in [license.txt](license.txt).
 
