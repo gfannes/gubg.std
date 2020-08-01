@@ -4,6 +4,7 @@
 #include "gubg/platform.h"
 
 #if GUBG_PLATFORM_OS_ARDUINO
+#include <stdint.h>
 namespace std { 
     using uint8_t  = ::uint8_t;
     using uint16_t = ::uint16_t;
