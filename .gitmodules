@@ -1,4 +1,0 @@
-[submodule "extern/catch2"]
-	path = extern/catch2
-	url = https://github.com/catchorg/catch2
-	branch = devel
