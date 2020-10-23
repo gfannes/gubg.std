@@ -31,4 +31,3 @@ unit_tests
 *.app
 CMakeLists.txt
 
-extern/
