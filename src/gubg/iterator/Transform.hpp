@@ -14,7 +14,7 @@ namespace gubg { namespace iterator {
         struct Transformer
         {
             template <typename It>
-            using result_type = std::result_of_t<Functor(typename std::iterator_traits<It>::reference)>;
+            using result_type = std::invoke_result_t<Functor(typename std::iterator_traits<It>::reference)>;
 
             Transformer(Functor f = Functor()) : f_(f) {}
 
@@ -32,7 +32,7 @@ namespace gubg { namespace iterator {
         struct Transformer<Functor, false>
         {
             template <typename It>
-            using result_type = std::result_of_t<Functor(It)>;
+            using result_type = std::invoke_result_t<Functor(It)>;
 
             Transformer(Functor f = Functor()) : f_(f) {}
             template <typename Iterator>
