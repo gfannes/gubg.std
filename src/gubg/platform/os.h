@@ -11,6 +11,8 @@
 #define GUBG_PLATFORM_OS "osx"
 #define GUBG_PLATFORM_OS_OSX 1
 #define GUBG_PLATFORM_API_POSIX 1
+#include <AvailabilityMacros.h>
+#define GUBG_PLATFORM_OS_OSX_VERSION MAC_OS_X_VERSION_MAX_ALLOWED
 #endif
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)
