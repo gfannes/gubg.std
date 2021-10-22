@@ -7,6 +7,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <functional>
+#include <optional>
 
 namespace gubg { namespace thread { 
 

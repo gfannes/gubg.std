@@ -1,7 +1,7 @@
 #ifndef HEADER_gubg_ix_Range_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_ix_Range_hpp_ALREADY_INCLUDED
 
-#include <cstdint>
+#include <cstddef>
 
 namespace gubg { namespace ix { 
 
