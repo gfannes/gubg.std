@@ -6,7 +6,6 @@ using namespace gubg;
 TEST_CASE("Basic functionality tests", "[ut][ix][Range]")
 {
 	ix::Range range;
-	std::size_t size = 0u;
 
 	SECTION("check defaults")
 	{
@@ -16,22 +15,47 @@ TEST_CASE("Basic functionality tests", "[ut][ix][Range]")
 		REQUIRE(range.empty());
 	}
 
-	SECTION("consume()")
+	SECTION("ctor and ==")
 	{
-		range.consume(1u, size);
-		REQUIRE(size == 1u);
-		REQUIRE(range.begin() == 0u);
-		REQUIRE(range.size() == 1u);
+		ix::Range range1{1, 2};
+		REQUIRE(range1.begin() == 1);
+		REQUIRE(range1.end() == 1+2);
 
-		range.consume(2u, size);
-		REQUIRE(size == 3u);
-		REQUIRE(range.begin() == 1u);
-		REQUIRE(range.size() == 2u);
+		REQUIRE(!(range == range1));
+		REQUIRE(range != range1);
+
+		range.setup(1, 2);
+		REQUIRE(range == range1);
+		REQUIRE(!(range != range1));
+		range.clear();
+		range1.clear();
+		REQUIRE(range == range1);
+		REQUIRE(!(range != range1));
+	}
+
+	SECTION("setup() and clear()")
+	{
+		range.setup(1,2);
+		REQUIRE(range.begin() == 1);
+		REQUIRE(range.end() == 1+2);
+		range.clear();
+		REQUIRE(range.begin() == 0);
+		REQUIRE(range.end() == 0);
+	}
+
+	SECTION("ix()")
+	{
+		range.setup(1,2);
+		REQUIRE(range.ix(0) == 1);
+		REQUIRE(range[0] == 1);
+		REQUIRE(range.ix(1) == 2);
+		REQUIRE(range[1] == 2);
 	}
 
 	SECTION("each*()")
 	{
-		range.consume(10u, size);
+		const auto size = 10u;
+		range.setup(0u, size);
 
 		std::vector<unsigned int> vec0(size, 0u);
 		for (auto ix = 0u; ix < size; ++ix)
