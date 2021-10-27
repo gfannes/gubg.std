@@ -2,6 +2,7 @@
 #define HEADER_gubg_ix_Range_hpp_ALREADY_INCLUDED
 
 #include <cstddef>
+#include <optional>
 #include <ostream>
 
 namespace gubg { namespace ix { 
@@ -59,6 +60,8 @@ namespace gubg { namespace ix {
 		std::size_t begin_ = 0u;
 		std::size_t end_ = 0u;
 	};
+
+	using Range_opt = std::optional<Range>;
 
 	inline std::ostream &operator<<(std::ostream &os, const Range &range)
 	{
