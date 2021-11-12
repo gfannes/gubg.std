@@ -45,6 +45,8 @@ namespace gubg { namespace ix {
 		{
 			for (auto ix = begin_; ix != end_; ++ix) ftor(data[ix]...);
 		}
+
+		//ix starts from begin()
 		template <typename Ftor>
 		void each_index(Ftor &&ftor) const
 		{
@@ -54,6 +56,20 @@ namespace gubg { namespace ix {
 		void each_with_index(Ftor &&ftor, Data&&... data) const
 		{
 			for (auto ix = begin_; ix != end_; ++ix) ftor(data[ix]..., ix);
+		}
+
+		//ix starts from 0
+		template <typename Ftor>
+		void each_offset(Ftor &&ftor) const
+		{
+			const auto s = size();
+			for (auto ix = 0u; ix != s; ++ix) ftor(ix);
+		}
+		template <typename Ftor, typename... Data>
+		void each_with_offset(Ftor &&ftor, Data&&... data) const
+		{
+			const auto s = size();
+			for (auto ix = 0u; ix != s; ++ix) ftor(data[begin_+ix]..., ix);
 		}
 
 	private:
