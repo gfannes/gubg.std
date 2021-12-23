@@ -7,7 +7,7 @@
 namespace gubg { 
 
     //A contiguous-memory delayline with runtime size
-    //T should be easy to copy, there will always be 2 copies in existance for a given index
+    //T should be easy to copy, there will always be 2 copies in existence for a given index
     template <typename T>
     class History
     {
