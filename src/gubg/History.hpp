@@ -1,6 +1,7 @@
 #ifndef HEADER_gubg_History_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_History_hpp_ALREADY_INCLUDED
 
+#include <gubg/Range.hpp>
 #include <vector>
 #include <cassert>
 
@@ -82,6 +83,12 @@ namespace gubg {
         {
             assert(size_ > 0);
             return begin_[size_-1];
+        }
+
+        Range<const T *> range() const
+        {
+            const T *ptr = &front();
+            return Range<const T *>{ptr, ptr+size()};
         }
 
         void set(std::size_t ix, const T &v)
