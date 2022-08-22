@@ -1,7 +1,7 @@
 #ifndef HEADER_gubg_platform_h_ALREADY_INCLUDED
 #define HEADER_gubg_platform_h_ALREADY_INCLUDED
 
-#include "gubg/platform/compiler.h"
+#include <gubg/platform/compiler.h>
 #if !defined(GUBG_PLATFORM_COMPILER)
 #error GUBG_PLATFORM_COMPILER define not set
 #endif
@@ -14,12 +14,12 @@
 #error Unknown compiler brand
 #endif
 
-#include "gubg/platform/os.h"
+#include <gubg/platform/os.h>
 #if !defined(GUBG_PLATFORM_OS)
 #error GUBG_PLATFORM_OS define not set
 #endif
 
-#include "gubg/platform/endian.h"
+#include <gubg/platform/endian.h>
 #if !defined(GUBG_PLATFORM_ENDIAN) || (!GUBG_PLATFORM_ENDIAN_LITTLE && !GUBG_PLATFORM_ENDIAN_BIG)
 #error Not all endian defines are set
 #endif
