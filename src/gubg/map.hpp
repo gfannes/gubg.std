@@ -27,6 +27,13 @@ namespace gubg {
         if (it != map.end())
             ftor(it->second);
     }
+    template <typename Map, typename Key, typename Ftor>
+    void with_value(Map &map, const Key &key, Ftor &&ftor)
+    {
+        auto it = map.find(key);
+        if (it != map.end())
+            ftor(it->second);
+    }
 
 } 
 
