@@ -1,4 +1,4 @@
-module GUBG
+module Gubg
     module Thread
         class Pool
             def initialize(j: nil)
