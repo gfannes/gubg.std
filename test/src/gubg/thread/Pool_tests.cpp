@@ -11,4 +11,6 @@ TEST_CASE("thread::Pool tests", "[ut][thread][Pool]")
         std::cout << str << std::endl;
     };
     thread::Pool<Argument> tp{10, lambda};
+    tp.push_one("abc");
+    tp.push_one("def");
 }

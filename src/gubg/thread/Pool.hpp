@@ -1,36 +1,65 @@
 #ifndef HEADER_gubg_thread_Pool_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_thread_Pool_hpp_ALREADY_INCLUDED
 
-#include <thread>
-#include <list>
-#include <queue>
+#include <gubg/debug.hpp>
+
+#include <atomic>
 #include <condition_variable>
-#include <mutex>
 #include <functional>
+#include <list>
+#include <mutex>
 #include <optional>
+#include <queue>
+#include <thread>
 
-namespace gubg { namespace thread { 
+namespace gubg { namespace thread {
 
-    template <typename Argument>
+    template<typename Argument>
     class Pool
     {
     public:
-        template <typename Ftor>
-        Pool(unsigned int worker_count, Ftor &&ftor): ftor_(ftor)
+        template<typename Ftor>
+        Pool(unsigned int worker_count, Ftor &&ftor)
+            : ftor_(ftor)
         {
+            S("");
             for (auto ix = 0u; ix < worker_count; ++ix)
                 workers_.emplace_back(*this);
         }
         ~Pool()
         {
-            const auto sz = size();
-            Lock lock{queue_mutex_};
-            for (auto ix = 0u; ix < sz; ++ix)
-                queue_.emplace(std::nullopt);
+            {
+                Lock lock{queue_mutex_};
+                const auto sz = size();
+                for (auto ix = 0u; ix < sz; ++ix)
+                    queue_.emplace_back(std::nullopt);
+            }
             cv_.notify_all();
         }
 
-        unsigned int size() const {return workers_.size();}
+        unsigned int size() const { return workers_.size(); }
+
+        void push_one(Argument arg)
+        {
+            S("");
+            {
+                Lock lock{queue_mutex_};
+                queue_.emplace_back(arg);
+            }
+            cv_.notify_one();
+        }
+
+        template<typename Arguments>
+        void push_many(const Arguments &args)
+        {
+            S("");
+            {
+                Lock lock{queue_mutex_};
+                for (const auto &arg: args)
+                    queue_.emplace_back(arg);
+            }
+            cv_.notify_all();
+        }
 
     private:
         using MyPool = Pool<Argument>;
@@ -41,7 +70,8 @@ namespace gubg { namespace thread {
         class Worker
         {
         public:
-            Worker(MyPool &pool): pool_(pool), thread_(std::ref(*this)) {}
+            Worker(MyPool &pool)
+                : pool_(pool), thread_(std::ref(*this)) {}
             ~Worker()
             {
                 quit_ = true;
@@ -50,43 +80,48 @@ namespace gubg { namespace thread {
 
             void operator()()
             {
+                S("");
                 for (bool stop = false; !stop;)
                 {
                     Argument_opt arg_opt;
                     {
+                        L("Waiting for data");
                         Lock lock{pool_.queue_mutex_};
-                        pool_.cv_.wait(lock, [&](){
-                                if (pool_.queue_.empty()) return false;
-                                arg_opt = pool_.queue_.front();
-                                pool_.queue_.pop();
-                                return true;
-                                });
+                        pool_.cv_.wait(lock, [&]() {
+                            if (pool_.queue_.empty()) return false;
+                            arg_opt = pool_.queue_.back();
+                            pool_.queue_.pop_back();
+                            return true;
+                        });
                     }
 
                     if (!arg_opt)
                         stop = true;
                     else
                     {
+                        L("Processing ...");
+                        pool_.ftor_(*arg_opt);
+                        L("done");
                     }
                 }
             }
 
         private:
             MyPool &pool_;
-            volatile bool quit_ = false;
+            std::atomic<bool> quit_ = false;
             std::thread thread_;
         };
 
-        using Queue = std::queue<Argument_opt>;
+        using Queue = std::vector<Argument_opt>;
         Queue queue_;
         std::mutex queue_mutex_;
         std::condition_variable cv_;
 
-        std::function<void (Argument)> ftor_;
+        std::function<void(Argument)> ftor_;
 
         std::list<Worker> workers_;
     };
 
-} } 
+}} // namespace gubg::thread
 
 #endif
