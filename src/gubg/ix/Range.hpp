@@ -5,85 +5,108 @@
 #include <optional>
 #include <ostream>
 
-namespace gubg { namespace ix { 
+namespace gubg { namespace ix {
 
-	class Range
-	{
-	public:
-		Range() {}
-		Range(std::size_t start_ix, std::size_t size): begin_(start_ix), end_(start_ix+size) {}
+    class Range
+    {
+    public:
+        using Ix = std::size_t;
+        using Size = std::size_t;
 
-		bool operator==(const Range &rhs) const {return begin_ == rhs.begin_ && end_ == rhs.end_;}
-		bool operator!=(const Range &rhs) const {return !operator==(rhs);}
+        Range() {}
+        Range(Ix start_ix, Size size)
+            : begin_(start_ix), end_(start_ix + size) {}
 
-		std::size_t begin() const {return begin_;}
-		std::size_t end()   const {return end_;}
-		std::size_t size()  const {return end_ - begin_;}
-		bool empty()        const {return end_ == begin_;}
+        bool operator==(const Range &rhs) const { return begin_ == rhs.begin_ && end_ == rhs.end_; }
+        bool operator!=(const Range &rhs) const { return !operator==(rhs); }
 
-		void clear() {*this = Range();}
+        Ix start() const { return begin_; }
+        Ix stop() const { return end_; }
 
-		std::size_t ix(std::size_t offset) const {return begin_+offset;}
-		std::size_t operator[](std::size_t offset) const {return ix(offset);}
+        struct Iterator
+        {
+            Ix ix;
+            Iterator(Ix ix)
+                : ix(ix) {}
+            bool operator==(const Iterator &rhs) const { return ix == rhs.ix; }
+            bool operator!=(const Iterator &rhs) const { return ix != rhs.ix; }
+            Ix operator*() const { return ix; }
+            Iterator &operator++()
+            {
+                ++ix;
+                return *this;
+            }
+        };
 
-		void setup(std::size_t start_ix, std::size_t size)
-		{
-			begin_ = start_ix;
-			end_ = begin_+size;
-		}
-		void push_back(std::size_t size)
-		{
-			end_ += size;
-		}
-		void resize(std::size_t size)
-		{
-			end_ = begin_+size;
-		}
+        Iterator begin() const { return Iterator{begin_}; }
+        Iterator end() const { return Iterator{end_}; }
+        Size size() const { return end_ - begin_; }
+        bool empty() const { return end_ == begin_; }
 
-		template <typename Ftor, typename... Data>
-		void each(Ftor &&ftor, Data&&... data) const
-		{
-			for (auto ix = begin_; ix != end_; ++ix) ftor(data[ix]...);
-		}
+        void clear() { *this = Range(); }
 
-		//ix starts from begin()
-		template <typename Ftor>
-		void each_index(Ftor &&ftor) const
-		{
-			for (auto ix = begin_; ix != end_; ++ix) ftor(ix);
-		}
-		template <typename Ftor, typename... Data>
-		void each_with_index(Ftor &&ftor, Data&&... data) const
-		{
-			for (auto ix = begin_; ix != end_; ++ix) ftor(data[ix]..., ix);
-		}
+        Ix ix(Ix offset) const { return begin_ + offset; }
+        Ix operator[](Ix offset) const { return ix(offset); }
 
-		//ix starts from 0
-		template <typename Ftor>
-		void each_offset(Ftor &&ftor) const
-		{
-			const auto s = size();
-			for (auto ix = 0u; ix != s; ++ix) ftor(ix);
-		}
-		template <typename Ftor, typename... Data>
-		void each_with_offset(Ftor &&ftor, Data&&... data) const
-		{
-			const auto s = size();
-			for (auto ix = 0u; ix != s; ++ix) ftor(data[begin_+ix]..., ix);
-		}
+        void init(Ix start_ix, Ix size)
+        {
+            begin_ = start_ix;
+            end_ = begin_ + size;
+        }
 
-	private:
-		std::size_t begin_ = 0u;
-		std::size_t end_ = 0u;
-	};
+        void push_back(Ix size)
+        {
+            end_ += size;
+        }
+        void resize(Ix size)
+        {
+            end_ = begin_ + size;
+        }
 
-	using Range_opt = std::optional<Range>;
+        template<typename Ftor, typename... Data>
+        void each(Ftor &&ftor, Data &&...data) const
+        {
+            for (auto ix = begin_; ix != end_; ++ix) ftor(data[ix]...);
+        }
 
-	inline std::ostream &operator<<(std::ostream &os, const Range &range)
-	{
-		return os << "["  << range.begin() << "; " << range.size() << "]";
-	}
+        // ix starts from begin()
+        template<typename Ftor>
+        void each_index(Ftor &&ftor) const
+        {
+            for (auto ix = begin_; ix != end_; ++ix) ftor(ix);
+        }
+        template<typename Ftor, typename... Data>
+        void each_with_index(Ftor &&ftor, Data &&...data) const
+        {
+            for (auto ix = begin_; ix != end_; ++ix) ftor(data[ix]..., ix);
+        }
 
-} } 
+        // ix starts from 0
+        template<typename Ftor>
+        void each_offset(Ftor &&ftor) const
+        {
+            const auto s = size();
+            for (auto ix = 0u; ix != s; ++ix) ftor(ix);
+        }
+        template<typename Ftor, typename... Data>
+        void each_with_offset(Ftor &&ftor, Data &&...data) const
+        {
+            const auto s = size();
+            for (auto ix = 0u; ix != s; ++ix) ftor(data[begin_ + ix]..., ix);
+        }
+
+    private:
+        Ix begin_ = 0u;
+        Ix end_ = 0u;
+    };
+
+    using Range_opt = std::optional<Range>;
+
+    inline std::ostream &operator<<(std::ostream &os, const Range &range)
+    {
+        return os << "[" << range.start() << "; " << range.size() << "]";
+    }
+
+}} // namespace gubg::ix
 
 #endif
