@@ -107,6 +107,11 @@ namespace gubg { namespace ix {
         return os << "[" << range.start() << "; " << range.size() << "]";
     }
 
+    inline Range make_range(std::size_t size)
+    {
+        return Range(0, size);
+    }
+
 }} // namespace gubg::ix
 
 #endif
