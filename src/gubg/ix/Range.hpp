@@ -43,6 +43,8 @@ namespace gubg { namespace ix {
         Size size() const { return end_ - begin_; }
         bool empty() const { return end_ == begin_; }
 
+        bool contains(Ix ix) const { return begin_ <= ix && ix < end_; }
+
         void clear() { *this = Range(); }
 
         Ix ix(Ix offset) const { return begin_ + offset; }

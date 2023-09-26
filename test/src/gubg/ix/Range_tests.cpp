@@ -111,4 +111,15 @@ TEST_CASE("Basic functionality tests", "[ut][ix][Range]")
         {
         }
     }
+
+    SECTION("contains()")
+    {
+        range = ix::Range(2, 3);
+        REQUIRE(!range.contains(0));
+        REQUIRE(!range.contains(1));
+        REQUIRE(range.contains(2));
+        REQUIRE(range.contains(3));
+        REQUIRE(range.contains(4));
+        REQUIRE(!range.contains(5));
+    }
 }
