@@ -107,8 +107,21 @@ TEST_CASE("Basic functionality tests", "[ut][ix][Range]")
 
     SECTION("for()")
     {
-        for (auto ix : range)
+        range = ix::make_range(3);
+        using Vec = std::vector<std::size_t>;
+        Vec vec;
+        SECTION("normal")
         {
+            for (auto ix : range)
+                vec.push_back(ix);
+            REQUIRE(vec == Vec({0, 1, 2}));
+        }
+
+        SECTION("reverse()")
+        {
+            for (auto ix : range.reverse())
+                vec.push_back(ix);
+            REQUIRE(vec == Vec({2, 1, 0}));
         }
     }
 

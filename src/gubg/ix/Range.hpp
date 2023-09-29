@@ -1,6 +1,8 @@
 #ifndef HEADER_gubg_ix_Range_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_ix_Range_hpp_ALREADY_INCLUDED
 
+#include <gubg/ix/ReverseRange.hpp>
+
 #include <cstddef>
 #include <optional>
 #include <ostream>
@@ -96,6 +98,8 @@ namespace gubg { namespace ix {
             const auto s = size();
             for (auto ix = 0u; ix != s; ++ix) ftor(data[begin_ + ix]..., ix);
         }
+
+        ReverseRange reverse() const { return ReverseRange(begin_, end_); }
 
     private:
         Ix begin_ = 0u;
