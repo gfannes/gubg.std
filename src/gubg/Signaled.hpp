@@ -3,14 +3,25 @@
 
 namespace gubg {
 
-    template<typename T, typename Flag = bool>
+    namespace signaled {
+        // Can be extended by the user
+        template<typename Flag>
+        struct DefaultFlag
+        {
+            static constexpr Flag Value{};
+        };
+    } // namespace signaled
+
+    // Represents an object of type T, together with a flag of type Flag (default zero-initialized).
+    // The object is always present and valid, regardless of the value of the flag.
+    template<typename T, typename Flag = bool, Flag DefaultFlag = signaled::DefaultFlag<Flag>::Value>
     class Signaled
     {
     public:
-        using Self = Signaled<T, Flag>;
+        using Self = Signaled<T, Flag, DefaultFlag>;
 
         const Flag &flag() const { return flag_; }
-        operator bool() const { return flag(); }
+        operator Flag() const { return flag(); }
 
         Self &set(Flag flag)
         {
@@ -29,7 +40,7 @@ namespace gubg {
 
     private:
         T v_{};
-        Flag flag_{};
+        Flag flag_ = DefaultFlag;
     };
 
 } // namespace gubg
