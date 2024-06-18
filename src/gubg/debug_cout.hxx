@@ -1,8 +1,9 @@
 #ifndef HEADER_gubg_debug_cout_hpp_ALREADY_INCLUDED
 #define HEADER_gubg_debug_cout_hpp_ALREADY_INCLUDED
 
-#include "gubg/macro/stream.hpp"
-#include "gubg/macro/capture.hpp"
+#include <gubg/macro/stream.hpp>
+#include <gubg/macro/capture.hpp>
+
 #include <string>
 #include <iostream>
 
@@ -10,9 +11,12 @@ namespace gubg { namespace debug {
 
     namespace details { 
         template <typename T>
-            struct Level { static unsigned int value; };
+        struct Level
+        {
+            static thread_local unsigned int value;
+        };
         template <typename T>
-            unsigned int Level<T>::value = 0;
+        thread_local unsigned int Level<T>::value = 0;
     } 
 
     class Scope
@@ -22,7 +26,7 @@ namespace gubg { namespace debug {
             {
                 if (do_log())
                 {
-                    stream() << ">> " << debug_ns_ << " => " << function_name() << std::endl;
+                    stream() << ">> " << debug_ns_ << '.' << function_name() << std::endl;
                     ++details::Level<Scope>::value;
                 }
             }
@@ -31,7 +35,7 @@ namespace gubg { namespace debug {
                 if (do_log())
                 {
                     --details::Level<Scope>::value;
-                    stream() << "<< " << debug_ns_ << " => " << function_name() << std::endl;
+                    stream() << "<< " << debug_ns_ << '.' << function_name() << std::endl;
                 }
             }
 
